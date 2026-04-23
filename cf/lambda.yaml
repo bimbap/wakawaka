@@ -1,0 +1,238 @@
+Parameters:
+  InvokeLambdaRole:
+    Default: arn:aws:iam::155604817343:role/LabRole
+    Type: String
+
+
+
+Resources:
+  # ============== LAYER ==============
+  LambdaLayer:
+    Type: AWS::Lambda::LayerVersion
+    Properties:
+      CompatibleArchitectures:
+        - x86_64
+      CompatibleRuntimes:
+        - python3.15
+        - python3.14
+        - python3.13
+        - python3.12
+        - python3.11
+        - python3.10
+      Content:
+        S3Bucket: lks-lambda-ibrahim-2026
+        S3Key: layer/python.zip
+      Description: Layer for python library
+      LayerName: lks-layer-dependencies
+
+  # ============== FUNCTION ==============
+
+  OrderFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: lks-lambda-order-management
+      Handler: lambda_function.lambda_handler
+      Role: !Ref InvokeLambdaRole
+      Code:
+        S3Bucket: lks-lambda-ibrahim-2026
+        S3Key: function/order.zip
+      Layers:
+        - !Ref LambdaLayer
+      Runtime: python3.11
+      Timeout: 30
+      MemorySize: 512
+      TracingConfig:
+        Mode: Active
+      Environment:
+        Variables:
+          DB_HOST: !ImportValue DBEndpoint
+          DB_NAME: !ImportValue DBName
+          DB_USER: !ImportValue DBUsername
+          DB_PASSWORD: !ImportValue DBPassword
+          S3_BUCKET: !ImportValue OrdersBucket
+          # STATE_MACHINE_ARN: ""
+      VpcConfig:
+        SecurityGroupIds:
+          - !ImportValue SGLambda
+        SubnetIds:
+          - !ImportValue PrivateSubnet1
+          - !ImportValue PrivateSubnet2
+
+  PaymentFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: lks-lambda-process-payment
+      Handler: lambda_function.lambda_handler
+      Role: !Ref InvokeLambdaRole
+      Code:
+        S3Bucket: lks-lambda-ibrahim-2026
+        S3Key: function/payment.zip
+      Layers:
+        - !Ref LambdaLayer
+      Runtime: python3.11
+      Timeout: 30
+      MemorySize: 512
+      TracingConfig:
+        Mode: Active
+      # Environment:
+        # Variables:
+          # DB_HOST: !ImportValue DBEndpoint
+          # DB_NAME: !ImportValue DBName
+          # DB_USER: !ImportValue DBUsername
+          # DB_PASSWORD: !ImportValue DBPassword
+      VpcConfig:
+        SecurityGroupIds:
+          - !ImportValue SGLambda
+        SubnetIds:
+          - !ImportValue PrivateSubnet1
+          - !ImportValue PrivateSubnet2
+
+  InventoryFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: lks-lambda-update-inventory
+      Handler: lambda_function.lambda_handler
+      Role: !Ref InvokeLambdaRole
+      Code:
+        S3Bucket: lks-lambda-ibrahim-2026
+        S3Key: function/inventory.zip
+      Layers:
+        - !Ref LambdaLayer
+      Runtime: python3.11
+      Timeout: 45
+      MemorySize: 256
+      TracingConfig:
+        Mode: Active
+      Environment:
+        Variables:
+          DB_HOST: !ImportValue DBEndpoint
+          DB_NAME: !ImportValue DBName
+          DB_USER: !ImportValue DBUsername
+          DB_PASSWORD: !ImportValue DBPassword
+      VpcConfig:
+        SecurityGroupIds:
+          - !ImportValue SGLambda
+        SubnetIds:
+          - !ImportValue PrivateSubnet1
+          - !ImportValue PrivateSubnet2
+
+  NotificationFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: lks-lambda-send-notification
+      Handler: lambda_function.lambda_handler
+      Role: !Ref InvokeLambdaRole
+      Code:
+        S3Bucket: lks-lambda-ibrahim-2026
+        S3Key: function/notifications.zip
+      Layers:
+        - !Ref LambdaLayer
+      Runtime: python3.11
+      Timeout: 60
+      MemorySize: 256
+      TracingConfig:
+        Mode: Active
+      Environment:
+        Variables:
+          SNS_TOPIC_ARN: !ImportValue SNSTopicArn
+      VpcConfig:
+        SecurityGroupIds:
+          - !ImportValue SGLambda
+        SubnetIds:
+          - !ImportValue PrivateSubnet1
+          - !ImportValue PrivateSubnet2
+
+  GenerateFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: lks-lambda-generate-report
+      Handler: lambda_function.lambda_handler
+      Role: !Ref InvokeLambdaRole
+      Code:
+        S3Bucket: lks-lambda-ibrahim-2026
+        S3Key: function/generate.zip
+      Layers:
+        - !Ref LambdaLayer
+      Runtime: python3.11
+      Timeout: 60
+      MemorySize: 1024
+      TracingConfig:
+        Mode: Active
+      Environment:
+        Variables:
+          DB_HOST: !ImportValue DBEndpoint
+          DB_NAME: !ImportValue DBName
+          DB_USER: !ImportValue DBUsername
+          DB_PASSWORD: !ImportValue DBPassword
+          S3_BUCKET: !ImportValue OrdersBucket
+      VpcConfig:
+        SecurityGroupIds:
+          - !ImportValue SGLambda
+        SubnetIds:
+          - !ImportValue PrivateSubnet1
+          - !ImportValue PrivateSubnet2
+
+  InitFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: lks-lambda-init-db
+      Handler: lambda_function.lambda_handler
+      Role: !Ref InvokeLambdaRole
+      Code:
+        S3Bucket: lks-lambda-ibrahim-2026
+        S3Key: function/init.zip
+      Layers:
+        - !Ref LambdaLayer
+      Runtime: python3.11
+      Timeout: 300
+      MemorySize: 512
+      TracingConfig:
+        Mode: Active
+      Environment:
+        Variables:
+          DB_HOST: !ImportValue DBEndpoint
+          DB_NAME: !ImportValue DBName
+          DB_USER: !ImportValue DBUsername
+          DB_PASSWORD: !ImportValue DBPassword
+      VpcConfig:
+        SecurityGroupIds:
+          - !ImportValue SGLambda
+        SubnetIds:
+          - !ImportValue PrivateSubnet1
+          - !ImportValue PrivateSubnet2
+
+Outputs:
+  LambdaLayerArn:
+    Value: !GetAtt LambdaLayer.LayerVersionArn
+    Export:
+      Name: LambdaLayerArn
+
+  OrderLambdaArn:
+    Value: !GetAtt OrderFunction.Arn
+    Export:
+      Name: OrderLambdaArn
+
+  PaymentArn:
+    Value: !GetAtt PaymentFunction.Arn
+    Export:
+      Name: PaymentLambdaArn
+
+  InventoryLambdaArn:
+    Value: !GetAtt InventoryFunction.Arn
+    Export:
+      Name: InventoryLambdaArn
+
+  NotificationLambdaArn:
+    Value: !GetAtt NotificationFunction.Arn
+    Export:
+      Name: NotificationLambdaArn
+
+  GenerateLambdaArn:
+    Value: !GetAtt GenerateFunction.Arn
+    Export:
+      Name: GenerateLambdaArn
+
+  InitLambdaArn:
+    Value: !GetAtt InitFunction.Arn
+    Export:
+      Name: InitLambdaArn

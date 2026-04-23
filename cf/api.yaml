@@ -1,0 +1,226 @@
+Parameters:
+  RoleMethod:
+    Default: arn:aws:iam::155604817343:role/LabRole
+    Type: String
+
+  InvokeLambdaIntegration:
+    Default: arn:aws:lambda:us-east-1:155604817343:function:lks-lambda-order-management
+    Type: String
+
+Resources :
+  RestApi :
+    Type : AWS::ApiGateway::RestApi
+    Properties :
+        Name : lks-api-orders
+        EndpointAccessMode: BASIC
+        SecurityPolicy: SecurityPolicy_TLS13_1_3_2025_09
+        EndpointConfiguration:
+          IpAddressType: dualstack
+          Types:
+            - REGIONAL
+
+  # ============== RESOURCE ==============
+
+  OrdersResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId: !Ref RestApi
+      ParentId: !GetAtt RestApi.RootResourceId
+      PathPart: orders
+
+  OrdersIdResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId: !Ref RestApi
+      ParentId: !Ref OrdersResource
+      PathPart: "{id}"
+
+  StatusResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId: !Ref RestApi
+      ParentId: !GetAtt RestApi.RootResourceId
+      PathPart: status
+
+  StatusIdResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId: !Ref RestApi
+      ParentId: !Ref StatusResource
+      PathPart: "{id}"
+
+  CustomersResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId: !Ref RestApi
+      ParentId: !GetAtt RestApi.RootResourceId
+      PathPart: customers
+      
+  ProductsResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId: !Ref RestApi
+      ParentId: !GetAtt RestApi.RootResourceId
+      PathPart: products
+
+  # ============== METHOD ==============
+
+  GetOrdersMethod:
+    Type: 'AWS::ApiGateway::Method'
+    Properties:
+      RestApiId: !Ref RestApi
+      ResourceId: !Ref OrdersResource
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${InvokeLambdaIntegration}/invocations
+
+  PostOrdersMethod:
+    Type: 'AWS::ApiGateway::Method'
+    Properties:
+      RestApiId: !Ref RestApi
+      ResourceId: !Ref OrdersResource
+      HttpMethod: POST
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${InvokeLambdaIntegration}/invocations
+
+  GetOrdersIdMethod:
+    Type: 'AWS::ApiGateway::Method'
+    Properties:
+      RestApiId: !Ref RestApi
+      ResourceId: !Ref OrdersIdResource
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${InvokeLambdaIntegration}/invocations
+
+  PutOrdersIdMethod:
+    Type: 'AWS::ApiGateway::Method'
+    Properties:
+      RestApiId: !Ref RestApi
+      ResourceId: !Ref OrdersIdResource
+      HttpMethod: PUT
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${InvokeLambdaIntegration}/invocations
+
+  DeleteOrdersIdMethod:
+    Type: 'AWS::ApiGateway::Method'
+    Properties:
+      RestApiId: !Ref RestApi
+      ResourceId: !Ref OrdersIdResource
+      HttpMethod: DELETE
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${InvokeLambdaIntegration}/invocations
+
+  GetStatusMethod:
+    Type: 'AWS::ApiGateway::Method'
+    Properties:
+      RestApiId: !Ref RestApi
+      ResourceId: !Ref StatusIdResource
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${InvokeLambdaIntegration}/invocations
+
+  GetCustomersMethod:
+    Type: 'AWS::ApiGateway::Method'
+    Properties:
+      RestApiId: !Ref RestApi
+      ResourceId: !Ref CustomersResource
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${InvokeLambdaIntegration}/invocations
+
+  GetProductsMethod:
+    Type: 'AWS::ApiGateway::Method'
+    Properties:
+      RestApiId: !Ref RestApi
+      ResourceId: !Ref ProductsResource
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${InvokeLambdaIntegration}/invocations
+
+
+  # ============== DEPLOYMENT ==============
+
+  Deployment:
+    Type: 'AWS::ApiGateway::Deployment'
+    DependsOn:
+      - GetOrdersMethod
+      - PostOrdersMethod
+      - GetOrdersIdMethod
+      - PutOrdersIdMethod
+      - DeleteOrdersIdMethod
+      - GetStatusMethod
+      - GetCustomersMethod
+      - GetProductsMethod
+    Properties:
+      Description: API deployment
+      RestApiId: !Ref RestApi
+      StageName: production
+
+  # ============== API Key & UsagePlan ==============
+
+  ApiKey:
+    Type: 'AWS::ApiGateway::ApiKey'
+    DependsOn: Deployment
+    Properties:
+      Name: lks-api-key
+      Description: Secretly API Key
+      Enabled: true
+      StageKeys:
+        - RestApiId: !Ref RestApi
+          StageName: production
+
+  usagePlan:
+    Type: 'AWS::ApiGateway::UsagePlan'
+    DependsOn: Deployment
+    Properties:
+      ApiStages:
+        - ApiId: !Ref RestApi
+          Stage: production
+      Description: API Usage Plan
+      Quota:
+        Limit: 100000
+        Period: MONTH
+      Throttle:
+        BurstLimit: 2000
+        RateLimit: 1000
+      UsagePlanName: lks-usage-plan
+
+  usagePlanKey:
+    Type: 'AWS::ApiGateway::UsagePlanKey'
+    DependsOn:
+      - ApiKey
+      - usagePlan
+    Properties:
+      KeyId: !Ref ApiKey
+      KeyType: API_KEY
+      UsagePlanId: !Ref usagePlan
+
+Outputs:
+  RestApiId:
+    Value: !GetAtt RestApi.RestApiId
+    Export:
+      Name: RestApiId

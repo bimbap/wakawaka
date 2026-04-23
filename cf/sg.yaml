@@ -1,0 +1,71 @@
+Resources:
+  SGLambda:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security for lambda function
+      VpcId: !ImportValue VPC
+      SecurityGroupEgress:
+        - IpProtocol: "-1"
+          FroPort: -1
+          ToPort: -1
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: lks-sg-lambda
+
+  SGRDS:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security for RDS
+      VpcId: !ImportValue VPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 5432
+          ToPort: 5432
+          SourceSecurityGroupId: !Ref SGLambda
+      SecurityGroupEgress:
+        - IpProtocol: "-1"
+          FroPort: -1
+          ToPort: -1
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: lks-sg-rds
+  SGEP:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security for vpc endpoint
+      VpcId: !ImportValue VPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 20.1.0.0/20
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 20.1.0.0/20
+      SecurityGroupEgress:
+        - IpProtocol: "-1"
+          FroPort: -1
+          ToPort: -1
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: lks-sg-endpoint
+
+Outputs:
+  SGLambdaId:
+    Value: !Ref SGLambda
+    Export:
+      Name: SGLambda
+
+  SGRDSId:
+    Value: !Ref SGRDS
+    Export:
+      Name: SGRDS
+
+  SGEPId:
+    Value: !Ref SGEP
+    Export:
+      Name: SGEP

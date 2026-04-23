@@ -1,0 +1,82 @@
+Resources:
+  S3Endpoint:
+    Type: 'AWS::EC2::VPCEndpoint'
+    Properties:
+      VpcEndpointType: 'Gateway'
+      VpcId: !ImportValue VPC
+      ServiceName: !Sub 'com.amazonaws.${AWS::Region}.s3'
+      IpAddressType: dualstack
+      RouteTableIds:
+        - !ImportValue PrivateRouteTable
+      Tags:
+        - Key: Name
+          Value: lks-s3-endpoints
+
+  StepfuncEndpoint:
+    Type: 'AWS::EC2::VPCEndpoint'
+    Properties:
+      VpcEndpointType: 'Interface'
+      ServiceName: !Sub 'com.amazonaws.${AWS::Region}.states'
+      VpcId: !ImportValue VPC
+      PrivateDnsEnabled: true
+      SubnetIds: 
+        - !ImportValue PrivateSubnet1
+        - !ImportValue PrivateSubnet2
+      SecurityGroupIds:
+        - !ImportValue SGEP
+      Tags:
+        - Key: Name
+          Value: lks-steps-endpoints
+
+  EventBridgeEndpoint:
+    Type: 'AWS::EC2::VPCEndpoint'
+    Properties:
+      VpcEndpointType: 'Interface'
+      ServiceName: !Sub 'com.amazonaws.${AWS::Region}.events'
+      VpcId: !ImportValue VPC
+      PrivateDnsEnabled: true
+      SubnetIds: 
+        - !ImportValue PrivateSubnet1
+        - !ImportValue PrivateSubnet2
+      SecurityGroupIds:
+        - !ImportValue SGEP
+      Tags:
+        - Key: Name
+          Value: lks-eventbridge-endpoints
+
+  SNSEndpoint:
+    Type: 'AWS::EC2::VPCEndpoint'
+    Properties:
+      VpcEndpointType: 'Interface'
+      ServiceName: !Sub 'com.amazonaws.${AWS::Region}.sns'
+      VpcId: !ImportValue VPC
+      PrivateDnsEnabled: true
+      SubnetIds: 
+        - !ImportValue PrivateSubnet1
+        - !ImportValue PrivateSubnet2
+      SecurityGroupIds:
+        - !ImportValue SGEP
+      Tags:
+        - Key: Name
+          Value: lks-sns-endpoints
+
+Outputs:
+  S3EP:
+    Value: !Ref S3Endpoint
+    Export:
+      Name: s3-ep
+
+  StepsEP:
+    Value: !Ref StepfuncEndpoint
+    Export:
+      Name: steps-ep
+
+  EventBridgeGEP:
+    Value: !Ref EventBridgeEndpoint
+    Export:
+      Name: events-ep
+
+  SNSEP:
+    Value: !Ref SNSEndpoint
+    Export:
+      Name: sns-ep

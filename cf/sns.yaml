@@ -1,0 +1,21 @@
+Resources:
+  SNSTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      Subscription:
+        - Endpoint: "handi@seamolec.org"
+          Protocol: "email"
+      TopicName: "lks-sns-order-notifications"
+
+Outputs:
+  TopicArn:
+    Description: The ARN of the created SNS topic
+    Value: !Ref SNSTopic
+    Export:
+      Name: SNSTopicArn
+  TopicName:
+    Description: The name of the created SNS topic
+    Value: "lks-sns-order-notifications"
+    Export:
+      Name: SNSTopicName
+         

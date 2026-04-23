@@ -1,0 +1,95 @@
+Parameters:
+  DBInstanceID:
+    Default: lks-rds-orders
+    Description: My database instance
+    Type: String
+
+  DBName:
+    Default: ordersdb
+    Description: My database
+    Type: String
+
+  DBInstanceClass:
+    Default: db.t3.micro
+    Description: DB instance class
+    Type: String
+
+  DBAllocatedStorage:
+    Default: '20'
+    Description: The size of the database (GiB)
+    Type: Number
+
+  DBUsername:
+    NoEcho: 'true'
+    Default: dbadmin
+    Description: Username for MySQL database access
+    Type: String
+
+  DBPassword:
+    NoEcho: 'true'
+    Default: TechnoClouch2026!
+    Description: Password MySQL database access
+    Type: String
+
+  StorageType:
+    Default: gp3
+    Type: String
+
+Resources:
+  DBSubnetGroup: 
+    Type: AWS::RDS::DBSubnetGroup
+    Properties: 
+      DBSubnetGroupDescription: Custom db subnet group for serverless app
+      SubnetIds: 
+        - !ImportValue PrivateSubnet1
+        - !ImportValue PrivateSubnet2
+      Tags: 
+        - Key: Name
+          Value: lks-pv-db-sg
+
+  DB:
+    Type: 'AWS::RDS::DBInstance'
+    DependsOn: DBSubnetGroup
+    Properties:
+      DBInstanceIdentifier: !Ref DBInstanceID
+      DBName: !Ref DBName
+      DBInstanceClass: !Ref DBInstanceClass
+      AllocatedStorage: !Ref DBAllocatedStorage
+      Engine: postgres
+      EngineVersion: "15"
+      PerformanceInsightsRetentionPeriod: 7
+      EnablePerformanceInsights: true
+      PubliclyAccessible: false
+      StorageType: !Ref StorageType
+      DBSubnetGroupName: !Ref DBSubnetGroup
+      MasterUsername: !Ref DBUsername
+      MasterUserPassword: !Ref DBPassword
+      VPCSecurityGroups:
+        - !ImportValue SGRDS
+
+
+Outputs:
+  DBEndpoint:
+    Value: !GetAtt DB.Endpoint.Address
+    Export:
+      Name: DBEndpoint
+
+  DBPort:
+    Value: !GetAtt DB.Endpoint.Port
+    Export:
+      Name: DBPort  
+
+  DBName:
+    Value: !Ref DBName
+    Export:
+      Name: DBName
+
+  DBUsername:
+    Value: "dbadmin"
+    Export:
+      Name: DBUsername
+
+  DBPassword:
+    Value: "TechnoClouch2026!"
+    Export:
+      Name: DBPassword

@@ -1,0 +1,63 @@
+Resources:
+  OrdersBucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: lks-orders-ibrahim-2026
+      VersioningConfiguration:
+        Status: Enabled
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
+      LifecycleConfiguration:
+        Rules:
+          - Id: lks-lifecycle-orders-bucket-rule
+            Prefix: glacier
+            Status: Enabled
+            ExpirationInDays: 365
+            Transitions:
+              - TransitionInDays: 30
+                StorageClass: INTELLIGENT_TIERING
+              - TransitionInDays: 90
+                StorageClass: GLACIER
+      CorsConfiguration:
+        CorsRules:
+          - AllowedHeaders:
+              - '*'
+            AllowedMethods:
+              - GET
+              - POST
+              - PUT
+            AllowedOrigins:
+              - '*'
+
+  LogsBucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: lks-logs-ibrahim-2026
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
+      LifecycleConfiguration:
+        Rules:
+          - Id: lks-lifecycle-logs-bucket-rule
+            Prefix: glacier
+            Status: Enabled
+            ExpirationInDays: 90
+            Transitions:
+              - TransitionInDays: 7
+                StorageClass: INTELLIGENT_TIERING
+
+Outputs:
+  OrdersBucketId:
+    Value: !Ref OrdersBucket
+    Export:
+      Name: OrdersBucket
+
+  LogsBucketId:
+    Value: !Ref LogsBucket
+    Export:
+      Name: LogsBucket
