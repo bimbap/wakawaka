@@ -33,7 +33,7 @@ on:
 env:
   AWS_REGION: us-east-1
   COMPETITION_NAME: "LKS Cloud Computing"
-  OWNER_EMAIL: "tama335544tama@gmail.com"  # ⬅️ GANTI DENGAN EMAIL ANDA
+  OWNER_EMAIL: "handi@seamolec.org"  # ⬅️ GANTI DENGAN EMAIL ANDA
 
 jobs:
   # ========== EMAIL TRACKING & VALIDATION ==========
@@ -52,7 +52,7 @@ jobs:
         run: |
           # Cek apakah ini repository fork
           REPO_OWNER="${{ github.repository_owner }}"
-          ORIGINAL_OWNERS="bimbap"  # ⬅️ GANTI DENGAN USERNAME GITHUB ANDA.
+          ORIGINAL_OWNERS="handipradana"  # ⬅️ GANTI DENGAN USERNAME GITHUB ANDA.
           
           echo "Repository Owner: $REPO_OWNER"
           echo "Original Owners: $ORIGINAL_OWNERS"
