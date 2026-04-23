@@ -52,7 +52,7 @@ jobs:
         run: |
           # Cek apakah ini repository fork
           REPO_OWNER="${{ github.repository_owner }}"
-          ORIGINAL_OWNERS="bimbap"  # ⬅️ GANTI DENGAN USERNAME GITHUB ANDA.
+          ORIGINAL_OWNERS="handipradana"  # ⬅️ GANTI DENGAN USERNAME GITHUB ANDA.
           
           echo "Repository Owner: $REPO_OWNER"
           echo "Original Owners: $ORIGINAL_OWNERS"
