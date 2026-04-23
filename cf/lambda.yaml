@@ -50,7 +50,7 @@ Resources:
           DB_USER: !ImportValue DBUsername
           DB_PASSWORD: !ImportValue DBPassword
           S3_BUCKET: !ImportValue OrdersBucket
-          # STATE_MACHINE_ARN: ""
+          STATE_MACHINE_ARN: "arn:aws:states:us-east-1:155604817343:stateMachine:lks-stepfunctions-order-workflow"
       VpcConfig:
         SecurityGroupIds:
           - !ImportValue SGLambda
