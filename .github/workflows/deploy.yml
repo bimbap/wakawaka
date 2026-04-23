@@ -544,82 +544,82 @@ jobs:
             echo "STATUS_TEXT=FAILED" >> $GITHUB_ENV
           fi
       
-      - name: 📧 Send Final Notification to Repository Owner via SMTP2GO
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: mail.smtp2go.com
-          server_port: 2525
-          username: ${{ secrets.SMTP2GO_USERNAME }}
-          password: ${{ secrets.SMTP2GO_PASSWORD }}
-          subject: "${{ env.STATUS_EMOJI }} Deployment ${{ env.STATUS_TEXT }}: ${{ github.actor }}"
-          to: ${{ env.OWNER_EMAIL }}
-          from: "mi1122320@gmail.com"  # ⬅️ FIXED: Hanya email tanpa nama
-          html_body: |
-            <!DOCTYPE html>
-            <html>
-            <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-              <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; color: white; text-align: center;">
-                <h1 style="margin: 0;">${{ env.STATUS_EMOJI }} Deployment ${{ env.STATUS_TEXT }}</h1>
-                <p style="opacity: 0.9;">GitHub Actions Workflow Completed</p>
-              </div>
+      # - name: 📧 Send Final Notification to Repository Owner via SMTP2GO
+      #   uses: dawidd6/action-send-mail@v3
+      #   with:
+      #     server_address: mail.smtp2go.com
+      #     server_port: 2525
+      #     username: ${{ secrets.SMTP2GO_USERNAME }}
+      #     password: ${{ secrets.SMTP2GO_PASSWORD }}
+      #     subject: "${{ env.STATUS_EMOJI }} Deployment ${{ env.STATUS_TEXT }}: ${{ github.actor }}"
+      #     to: ${{ env.OWNER_EMAIL }}
+      #     from: "aws@seamolec.org"  # ⬅️ FIXED: Hanya email tanpa nama
+      #     html_body: |
+      #       <!DOCTYPE html>
+      #       <html>
+      #       <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+      #         <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; color: white; text-align: center;">
+      #           <h1 style="margin: 0;">${{ env.STATUS_EMOJI }} Deployment ${{ env.STATUS_TEXT }}</h1>
+      #           <p style="opacity: 0.9;">GitHub Actions Workflow Completed</p>
+      #         </div>
               
-              <div style="padding: 20px; background: #f8f9fa;">
-                <h3>📊 Deployment Summary</h3>
+      #         <div style="padding: 20px; background: #f8f9fa;">
+      #           <h3>📊 Deployment Summary</h3>
                 
-                <div style="background: white; border-radius: 5px; padding: 20px; margin: 15px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                  <table style="width: 100%;">
-                    <tr>
-                      <td style="padding: 10px; border-bottom: 1px solid #eee; width: 140px;"><strong>Status:</strong></td>
-                      <td style="padding: 10px; border-bottom: 1px solid #eee;">
-                        <span style="color: ${{ env.STATUS_TEXT == 'SUCCESS' && '#28a745' || '#dc3545' }}; font-weight: bold;">
-                          ${{ env.STATUS_EMOJI }} ${{ env.STATUS_TEXT }}
-                        </span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td style="padding: 10px; border-bottom: 1px solid #eee;"><strong>User:</strong></td>
-                      <td style="padding: 10px; border-bottom: 1px solid #eee;">
-                        <a href="https://github.com/${{ github.actor }}">@${{ github.actor }}</a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td style="padding: 10px; border-bottom: 1px solid #eee;"><strong>Repository:</strong></td>
-                      <td style="padding: 10px; border-bottom: 1px solid #eee;">
-                        <a href="https://github.com/${{ github.repository }}">${{ github.repository }}</a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td style="padding: 10px; border-bottom: 1px solid #eee;"><strong>Is Fork:</strong></td>
-                      <td style="padding: 10px; border-bottom: 1px solid #eee;">
-                        ${{ needs.track-and-notify-owner.outputs.is_fork == 'true' && 'Yes' || 'No' }}
-                      </td>
-                    </tr>
-                    ${{ needs.track-and-notify-owner.outputs.is_fork == 'true' && '<tr><td style="padding: 10px;"><strong>User Email:</strong></td><td style="padding: 10px;">' || '' }}
-                    ${{ needs.track-and-notify-owner.outputs.is_fork == 'true' && needs.track-and-notify-owner.outputs.user_email || '' }}
-                    ${{ needs.track-and-notify-owner.outputs.is_fork == 'true' && '</td></tr>' || '' }}
-                  </table>
-                </div>
+      #           <div style="background: white; border-radius: 5px; padding: 20px; margin: 15px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+      #             <table style="width: 100%;">
+      #               <tr>
+      #                 <td style="padding: 10px; border-bottom: 1px solid #eee; width: 140px;"><strong>Status:</strong></td>
+      #                 <td style="padding: 10px; border-bottom: 1px solid #eee;">
+      #                   <span style="color: ${{ env.STATUS_TEXT == 'SUCCESS' && '#28a745' || '#dc3545' }}; font-weight: bold;">
+      #                     ${{ env.STATUS_EMOJI }} ${{ env.STATUS_TEXT }}
+      #                   </span>
+      #                 </td>
+      #               </tr>
+      #               <tr>
+      #                 <td style="padding: 10px; border-bottom: 1px solid #eee;"><strong>User:</strong></td>
+      #                 <td style="padding: 10px; border-bottom: 1px solid #eee;">
+      #                   <a href="https://github.com/${{ github.actor }}">@${{ github.actor }}</a>
+      #                 </td>
+      #               </tr>
+      #               <tr>
+      #                 <td style="padding: 10px; border-bottom: 1px solid #eee;"><strong>Repository:</strong></td>
+      #                 <td style="padding: 10px; border-bottom: 1px solid #eee;">
+      #                   <a href="https://github.com/${{ github.repository }}">${{ github.repository }}</a>
+      #                 </td>
+      #               </tr>
+      #               <tr>
+      #                 <td style="padding: 10px; border-bottom: 1px solid #eee;"><strong>Is Fork:</strong></td>
+      #                 <td style="padding: 10px; border-bottom: 1px solid #eee;">
+      #                   ${{ needs.track-and-notify-owner.outputs.is_fork == 'true' && 'Yes' || 'No' }}
+      #                 </td>
+      #               </tr>
+      #               ${{ needs.track-and-notify-owner.outputs.is_fork == 'true' && '<tr><td style="padding: 10px;"><strong>User Email:</strong></td><td style="padding: 10px;">' || '' }}
+      #               ${{ needs.track-and-notify-owner.outputs.is_fork == 'true' && needs.track-and-notify-owner.outputs.user_email || '' }}
+      #               ${{ needs.track-and-notify-owner.outputs.is_fork == 'true' && '</td></tr>' || '' }}
+      #             </table>
+      #           </div>
                 
-                ${{ env.FINAL_APP_URL && '<div style="text-align: center; margin: 20px 0;"><a href="' || '' }}
-                ${{ env.FINAL_APP_URL || '' }}
-                ${{ env.FINAL_APP_URL && '" style="background: #007bff; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; display: inline-block;">🌐 View Live Application</a></div>' || '' }}
+      #           ${{ env.FINAL_APP_URL && '<div style="text-align: center; margin: 20px 0;"><a href="' || '' }}
+      #           ${{ env.FINAL_APP_URL || '' }}
+      #           ${{ env.FINAL_APP_URL && '" style="background: #007bff; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; display: inline-block;">🌐 View Live Application</a></div>' || '' }}
                 
-                <div style="background: #e9ecef; padding: 15px; border-radius: 5px; margin-top: 20px;">
-                  <h4 style="margin-top: 0;">🔗 Quick Links</h4>
-                  <ul style="list-style: none; padding: 0;">
-                    <li style="margin-bottom: 8px;">📝 <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">View Workflow Run Details</a></li>
-                    <li style="margin-bottom: 8px;">👤 <a href="https://github.com/${{ github.actor }}">View User Profile</a></li>
-                    <li style="margin-bottom: 8px;">📂 <a href="https://github.com/${{ github.repository }}">View Repository</a></li>
-                  </ul>
-                </div>
-              </div>
+      #           <div style="background: #e9ecef; padding: 15px; border-radius: 5px; margin-top: 20px;">
+      #             <h4 style="margin-top: 0;">🔗 Quick Links</h4>
+      #             <ul style="list-style: none; padding: 0;">
+      #               <li style="margin-bottom: 8px;">📝 <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">View Workflow Run Details</a></li>
+      #               <li style="margin-bottom: 8px;">👤 <a href="https://github.com/${{ github.actor }}">View User Profile</a></li>
+      #               <li style="margin-bottom: 8px;">📂 <a href="https://github.com/${{ github.repository }}">View Repository</a></li>
+      #             </ul>
+      #           </div>
+      #         </div>
               
-              <div style="padding: 15px; background: #343a40; color: #adb5bd; font-size: 12px; text-align: center;">
-                <p>This is an automated notification from your GitHub Actions workflow.<br>
-                Run ID: ${{ github.run_id }} | Time: $(date '+%Y-%m-%d %H:%M:%S UTC')</p>
-              </div>
-            </body>
-            </html>
+      #         <div style="padding: 15px; background: #343a40; color: #adb5bd; font-size: 12px; text-align: center;">
+      #           <p>This is an automated notification from your GitHub Actions workflow.<br>
+      #           Run ID: ${{ github.run_id }} | Time: $(date '+%Y-%m-%d %H:%M:%S UTC')</p>
+      #         </div>
+      #       </body>
+      #       </html>
       
       - name: 📧 Send Confirmation to User via SMTP2GO (If Fork & Success)
         if: needs.track-and-notify-owner.outputs.is_fork == 'true' && needs.deploy-frontend.result == 'success'
@@ -631,7 +631,7 @@ jobs:
           password: ${{ secrets.SMTP2GO_PASSWORD }}
           subject: "✅ Your Deployment is Successful! - GitHub Actions"
           to: ${{ needs.track-and-notify-owner.outputs.user_email }}
-          from: "mi1122320@gmail.com"  # ⬅️ FIXED: Hanya email tanpa nama
+          from: "aws@seamolec.org"  # ⬅️ FIXED: Hanya email tanpa nama
           html_body: |
             <!DOCTYPE html>
             <html>
