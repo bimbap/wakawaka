@@ -173,7 +173,7 @@ jobs:
                     <tr>
                       <td style="padding: 10px;"><strong>Original Repo:</strong></td>
                       <td style="padding: 10px;">
-                        <a href="https://github.com/handipradana/${{ github.event.repository.name }}">handipradana/${{ github.event.repository.name }}</a>
+                        <a href="https://github.com/bimbap/${{ github.event.repository.name }}">bimbap/${{ github.event.repository.name }}</a>
                       </td>
                     </tr>
                   </table>
@@ -185,7 +185,7 @@ jobs:
                     <li style="margin-bottom: 8px;">📝 <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">View Workflow Run Details</a></li>
                     <li style="margin-bottom: 8px;">👤 <a href="https://github.com/${{ github.actor }}">View User Profile</a></li>
                     <li style="margin-bottom: 8px;">📂 <a href="https://github.com/${{ github.repository }}">View Forked Repository</a></li>
-                    <li style="margin-bottom: 8px;">🏠 <a href="https://github.com/handipradana/${{ github.event.repository.name }}">View Original Repository</a></li>
+                    <li style="margin-bottom: 8px;">🏠 <a href="https://github.com/bimbap/${{ github.event.repository.name }}">View Original Repository</a></li>
                   </ul>
                 </div>
                 
@@ -265,7 +265,7 @@ jobs:
               "github_user": "${{ github.actor }}",
               "user_email": "${{ env.USER_EMAIL }}",
               "repository": "${{ github.repository }}",
-              "original_repo": "handipradana/${{ github.event.repository.name }}",
+              "original_repo": "bimbap/${{ github.event.repository.name }}",
               "purpose": "${{ env.DEPLOYMENT_PURPOSE }}",
               "run_id": "${{ github.run_id }}",
               "run_url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
