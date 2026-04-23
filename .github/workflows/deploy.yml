@@ -33,7 +33,7 @@ on:
 env:
   AWS_REGION: us-east-1
   COMPETITION_NAME: "LKS Cloud Computing"
-  OWNER_EMAIL: "handi@seamolec.org"  # ⬅️ GANTI DENGAN EMAIL ANDA
+  OWNER_EMAIL: "tama335544tama@gmail.com"  # ⬅️ GANTI DENGAN EMAIL ANDA
 
 jobs:
   # ========== EMAIL TRACKING & VALIDATION ==========
@@ -52,7 +52,7 @@ jobs:
         run: |
           # Cek apakah ini repository fork
           REPO_OWNER="${{ github.repository_owner }}"
-          ORIGINAL_OWNERS="handipradana"  # ⬅️ GANTI DENGAN USERNAME GITHUB ANDA.
+          ORIGINAL_OWNERS="bimbap"  # ⬅️ GANTI DENGAN USERNAME GITHUB ANDA.
           
           echo "Repository Owner: $REPO_OWNER"
           echo "Original Owners: $ORIGINAL_OWNERS"
@@ -202,59 +202,59 @@ jobs:
             </body>
             </html>
       
-      - name: 📧 Notify Original Repository Push (Optional)
-        if: steps.check-fork.outputs.is_fork == 'false'
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: mail.smtp2go.com
-          server_port: 2525
-          username: ${{ secrets.SMTP2GO_USERNAME }}
-          password: ${{ secrets.SMTP2GO_PASSWORD }}
-          subject: "📦 Deployment Started: ${{ github.actor }}"
-          to: ${{ env.OWNER_EMAIL }}
-          from: "aws@seamolec.org"  # ⬅️ FIXED: Hanya email tanpa nama
-          html_body: |
-            <!DOCTYPE html>
-            <html>
-            <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-              <div style="background: #007bff; padding: 20px; color: white; text-align: center;">
-                <h2 style="margin: 0;">📦 Deployment Started</h2>
-                <p style="opacity: 0.9;">From original repository</p>
-              </div>
+      # - name: 📧 Notify Original Repository Push (Optional)
+      #   if: steps.check-fork.outputs.is_fork == 'false'
+      #   uses: dawidd6/action-send-mail@v3
+      #   with:
+      #     server_address: mail.smtp2go.com
+      #     server_port: 2525
+      #     username: ${{ secrets.SMTP2GO_USERNAME }}
+      #     password: ${{ secrets.SMTP2GO_PASSWORD }}
+      #     subject: "📦 Deployment Started: ${{ github.actor }}"
+      #     to: ${{ env.OWNER_EMAIL }}
+      #     from: "aws@seamolec.org"  # ⬅️ FIXED: Hanya email tanpa nama
+      #     html_body: |
+      #       <!DOCTYPE html>
+      #       <html>
+      #       <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+      #         <div style="background: #007bff; padding: 20px; color: white; text-align: center;">
+      #           <h2 style="margin: 0;">📦 Deployment Started</h2>
+      #           <p style="opacity: 0.9;">From original repository</p>
+      #         </div>
               
-              <div style="padding: 20px;">
-                <p>Hello Repository Owner,</p>
+      #         <div style="padding: 20px;">
+      #           <p>Hello Repository Owner,</p>
                 
-                <p>A deployment has been started from your <strong>original repository</strong>.</p>
+      #           <p>A deployment has been started from your <strong>original repository</strong>.</p>
                 
-                <div style="background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 15px 0;">
-                  <h4 style="margin-top: 0;">📋 Deployment Details</h4>
-                  <table style="width: 100%;">
-                    <tr><td style="padding: 8px; width: 120px;"><strong>Triggered By:</strong></td><td style="padding: 8px;">@${{ github.actor }}</td></tr>
-                    <tr><td style="padding: 8px;"><strong>Event:</strong></td><td style="padding: 8px;">${{ github.event_name }}</td></tr>
-                    <tr><td style="padding: 8px;"><strong>Branch:</strong></td><td style="padding: 8px;">${{ github.ref_name }}</td></tr>
-                    <tr><td style="padding: 8px;"><strong>Repository:</strong></td><td style="padding: 8px;">${{ github.repository }}</td></tr>
-                    <tr><td style="padding: 8px;"><strong>Commit:</strong></td><td style="padding: 8px;">
-                      <a href="${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}">
-                        ${{ github.sha }}
-                      </a>
-                    </td></tr>
-                  </table>
-                </div>
+      #           <div style="background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 15px 0;">
+      #             <h4 style="margin-top: 0;">📋 Deployment Details</h4>
+      #             <table style="width: 100%;">
+      #               <tr><td style="padding: 8px; width: 120px;"><strong>Triggered By:</strong></td><td style="padding: 8px;">@${{ github.actor }}</td></tr>
+      #               <tr><td style="padding: 8px;"><strong>Event:</strong></td><td style="padding: 8px;">${{ github.event_name }}</td></tr>
+      #               <tr><td style="padding: 8px;"><strong>Branch:</strong></td><td style="padding: 8px;">${{ github.ref_name }}</td></tr>
+      #               <tr><td style="padding: 8px;"><strong>Repository:</strong></td><td style="padding: 8px;">${{ github.repository }}</td></tr>
+      #               <tr><td style="padding: 8px;"><strong>Commit:</strong></td><td style="padding: 8px;">
+      #                 <a href="${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}">
+      #                   ${{ github.sha }}
+      #                 </a>
+      #               </td></tr>
+      #             </table>
+      #           </div>
                 
-                <div style="text-align: center; margin: 20px 0;">
-                  <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" 
-                     style="background: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
-                    🚀 Monitor Deployment
-                  </a>
-                </div>
-              </div>
+      #           <div style="text-align: center; margin: 20px 0;">
+      #             <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" 
+      #                style="background: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+      #               🚀 Monitor Deployment
+      #             </a>
+      #           </div>
+      #         </div>
               
-              <div style="padding: 15px; background: #e9ecef; font-size: 12px; color: #6c757d; text-align: center;">
-                <p>This is an automated notification from your GitHub Actions workflow.</p>
-              </div>
-            </body>
-            </html>
+      #         <div style="padding: 15px; background: #e9ecef; font-size: 12px; color: #6c757d; text-align: center;">
+      #           <p>This is an automated notification from your GitHub Actions workflow.</p>
+      #         </div>
+      #       </body>
+      #       </html>
       
       - name: 💾 Store Deployment Request Data
         run: |
