@@ -52,7 +52,7 @@ jobs:
         run: |
           # Cek apakah ini repository fork
           REPO_OWNER="${{ github.repository_owner }}"
-          ORIGINAL_OWNERS="handipradana"  # ⬅️ GANTI DENGAN USERNAME GITHUB ANDA.
+          ORIGINAL_OWNERS="bimbap"  # ⬅️ GANTI DENGAN USERNAME GITHUB ANDA.
           
           echo "Repository Owner: $REPO_OWNER"
           echo "Original Owners: $ORIGINAL_OWNERS"
@@ -126,7 +126,7 @@ jobs:
           password: ${{ secrets.SMTP2GO_PASSWORD }}
           subject: "🚨 DEPLOYMENT DETECTED FROM FORK: ${{ github.actor }}"
           to: ${{ env.OWNER_EMAIL }}
-          from: "ibrahimm.smkn10jkt.2026@gmail.com"  # ⬅️ FIXED: Hanya email tanpa nama
+          from: "aws@seamolec.org"  # ⬅️ FIXED: Hanya email tanpa nama
           html_body: |
             <!DOCTYPE html>
             <html>
@@ -212,7 +212,7 @@ jobs:
           password: ${{ secrets.SMTP2GO_PASSWORD }}
           subject: "📦 Deployment Started: ${{ github.actor }}"
           to: ${{ env.OWNER_EMAIL }}
-          from: "ibrahimm.smkn10jkt.2026@gmail.com"  # ⬅️ FIXED: Hanya email tanpa nama
+          from: "aws@seamolec.org"  # ⬅️ FIXED: Hanya email tanpa nama
           html_body: |
             <!DOCTYPE html>
             <html>
@@ -553,7 +553,7 @@ jobs:
           password: ${{ secrets.SMTP2GO_PASSWORD }}
           subject: "${{ env.STATUS_EMOJI }} Deployment ${{ env.STATUS_TEXT }}: ${{ github.actor }}"
           to: ${{ env.OWNER_EMAIL }}
-          from: "ibrahimm.smkn10jkt.2026@gmail.com"  # ⬅️ FIXED: Hanya email tanpa nama
+          from: "aws@seamolec.org"  # ⬅️ FIXED: Hanya email tanpa nama
           html_body: |
             <!DOCTYPE html>
             <html>
@@ -631,7 +631,7 @@ jobs:
           password: ${{ secrets.SMTP2GO_PASSWORD }}
           subject: "✅ Your Deployment is Successful! - GitHub Actions"
           to: ${{ needs.track-and-notify-owner.outputs.user_email }}
-          from: "ibrahimm.smkn10jkt.2026@gmail.com"  # ⬅️ FIXED: Hanya email tanpa nama
+          from: "aws@seamolec.org"  # ⬅️ FIXED: Hanya email tanpa nama
           html_body: |
             <!DOCTYPE html>
             <html>
